@@ -65,7 +65,7 @@ function mqttmsg(msg, headers){
 	msg="nodelogin: "+msg
 	console.warn("[warn] "+msg);
 	//const { execFile } = require('node:child_process');
-	//execFile('mosquitto_pub', ["-h","192.168.0.XX","-c","-u","mqttusername","-P","mqttpassword","-t","yourtopic","-m", msg+"\n"+headers], (error, stdout, stderr) => {});
+	//execFile('mosquitto_pub', ["-h","localhost","-c","-u","mqttusername","-P","mqttpassword","-t","yourtopic", "-m", msg+"\n"+headers], (error, stdout, stderr) => {});
 }
 
 module.exports = customLogin;
