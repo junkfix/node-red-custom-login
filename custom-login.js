@@ -1,3 +1,5 @@
+// https://github.com/htmltiger/node-red-custom-login/
+
 var cookie = require('cookie');
 var crypto = require('crypto');
 const nodeusername="yourusername";
