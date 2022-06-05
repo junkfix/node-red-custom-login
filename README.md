@@ -31,4 +31,5 @@ module.exports = {
 ```
 
 copy `custom-login.js` in the same folder as `settings.js`
+
 You can also configure the function to send MQTT message or run a shell command.
