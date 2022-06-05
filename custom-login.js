@@ -1,4 +1,5 @@
 // https://github.com/htmltiger/node-red-custom-login/
+// edit mqtt settings at the bottom function if required
 
 var cookie = require('cookie');
 var crypto = require('crypto');
@@ -38,7 +39,7 @@ function customLogin(req, res, next) {
 				crypto.createHash('sha512').update('#'+logy, 'utf8').digest('hex')==myhash)
 				{					
 				mqttmsg("new: "+ip,req.headers);
-				res.cookie("log", myhash, {maxAge: (14 * 864e5), secure: true}); //remember for 14 days, https secure
+				res.cookie("log", myhash, {expires: new Date(Date.now() + (14 * 864e5)), path: '/'}); //remember for 14 days
 				delete ipban[ip];
 				return res.redirect(req.originalUrl);
 			}else{
@@ -59,12 +60,12 @@ function customLogin(req, res, next) {
 }
 
 
-function mqttmsg(msg,headers){
+function mqttmsg(msg, headers){
 	headers=JSON.stringify(headers,null,2);
 	msg="nodelogin: "+msg
 	console.warn("[warn] "+msg);
-	const { execFile } = require('node:child_process');
-	execFile('mosquitto_pub', ["-h","192.168.0.XX","-c","-u","mqttusername","-P","mqttpassword","-t","yourtopic","-m", msg+"\n"+headers], (error, stdout, stderr) => {});
+	//const { execFile } = require('node:child_process');
+	//execFile('mosquitto_pub', ["-h","192.168.0.XX","-c","-u","mqttusername","-P","mqttpassword","-t","yourtopic","-m", msg+"\n"+headers], (error, stdout, stderr) => {});
 }
 
 module.exports = customLogin;
