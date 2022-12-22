@@ -9,9 +9,10 @@ const myhash=crypto.createHash('sha512').update("#"+nodeusername+"-"+nodepasswor
 var ipban={};
 function customLogin(req, res, next) {
 	
-	const ip=req.connection.remoteAddress;
 	var logy=''; var code=200;
-	
+	if (req.headers.cookie) {
+		logy = cookie.parse(req.headers.cookie)["log"] || '';
+	}
 	/*
 	//custom favicons from /home/pi/.node-red/static
 	if (['/icon64x64.png', '/icon120x120.png', '/icon192x192.png', '/favicon.ico'].includes(req.url)) {
@@ -27,33 +28,29 @@ function customLogin(req, res, next) {
 	}
 	*/
 	
-	if (req.headers.cookie) {
+	if (logy) {
+		const ip=req.connection.remoteAddress;
 		if(!(ip in ipban)){ipban[ip]={lastf:0,attempts:0};}
 		
 		//reset every 15mins 
 		if(ipban[ip].attempts>0 && Date.now() - ipban[ip].lastf >(15 * 60000)){ipban[ip].attempts=0;}
 		
-		logy = cookie.parse(req.headers.cookie);
-		logy = logy["log"];
-		if(logy){
-			if(logy == myhash){
-				return next();
-			}else if(ipban[ip].attempts < 3 && //max 3 attempts in 15mins
-				crypto.createHash('sha512').update('#'+logy, 'utf8').digest('hex')==myhash)
-				{					
-				alertme("PASSED: "+ip);
-				res.cookie("log", myhash, {expires: new Date(Date.now() + (14 * 864e5)), path: '/'}); //remember for 14 days
-				delete ipban[ip];
-				return res.redirect(req.originalUrl);
-			}else{
-				alertme("FAILED: "+ip+" "+logy,req.headers);
-				res.clearCookie("log");
-				ipban[ip].lastf=Date.now();
-				ipban[ip].attempts++;
-				logy="Login Failed";
-				code=401;
-			}
-			
+		if(logy == myhash){
+			return next();
+		}else if(ipban[ip].attempts < 3 && //max 3 attempts in 15mins
+			crypto.createHash('sha512').update('#'+logy, 'utf8').digest('hex')==myhash)
+			{					
+			alertme("PASSED: "+ip);
+			res.cookie("log", myhash, {expires: new Date(Date.now() + (14 * 864e5)), path: '/'}); //remember for 14 days
+			delete ipban[ip];
+			return res.redirect(req.originalUrl);
+		}else{
+			alertme("FAILED: "+ip+" "+logy,req.headers);
+			res.clearCookie("log");
+			ipban[ip].lastf=Date.now();
+			ipban[ip].attempts++;
+			logy="Login Failed";
+			code=401;
 		}
 	}
 	
