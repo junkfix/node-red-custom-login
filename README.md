@@ -2,6 +2,7 @@
 
 Here is the `settings.js` file changes:
 
+
 ```
 module.exports = {
 
@@ -29,6 +30,8 @@ module.exports = {
     },
 }
 ```
+here is full default [settings.js](https://github.com/htmltiger/node-red-custom-login/files/14100239/settings.js.txt) with above changes
+
 
 copy `custom-login.js` in the same folder as `settings.js`
 
