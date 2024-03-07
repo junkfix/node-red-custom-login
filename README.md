@@ -36,3 +36,6 @@ here is full default [settings.js](https://github.com/htmltiger/node-red-custom-
 copy `custom-login.js` in the same folder as `settings.js`
 
 You can also configure the function to send MQTT message or run a shell command.
+---
+
+<a href="https://www.buymeacoffee.com/htmltiger"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee"></a>
